@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
 app.post("/generate", async (req, res) => {
     const {queryDesc} = req.body
     try {
-        const sqlQuery = await generateSql(queryDesc)
+        const sqlQuery = await generateSql(queryDesc, "chatgpt") // model: "davinci" or "chatgpt"
         res.status(200).json({sqlQuery})
     } catch (error) {
         res.status(500).json({error: error})
