@@ -6,13 +6,31 @@ import { useState } from 'react'
 const App = () => {
 
   const [queryDesc, setQueryDesc] = useState('')
+  const [sqlQuery, setSqlQuery] = useState('') 
   const handleQueryDescChange = (e) => {
     setQueryDesc(e.target.value)
   } 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(queryDesc)
+    const query = await generateSqlQuery(queryDesc)
+    query?setSqlQuery(query):setSqlQuery('No query generated')
+  }
+
+  const generateSqlQuery = async (queryDesc) => {
+    try {
+      const response = await fetch('http://localhost:5000/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ queryDesc: queryDesc })
+      })
+      const data = await response.json()
+      return data.sqlQuery.trim()
+    } catch (err) {
+      console.error(err)
+    }
   }
   return (
     <main className="main">
@@ -30,6 +48,7 @@ const App = () => {
           value="Generate SQL Query"
         />
       </form>
+      <pre>{sqlQuery}</pre>
     </main>
   )
 }

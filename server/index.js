@@ -17,7 +17,7 @@ app.post("/generate", async (req, res) => {
     const {queryDesc} = req.body
     try {
         const sqlQuery = await generateSql(queryDesc)
-        res.status(200).json(sqlQuery)
+        res.status(200).json({sqlQuery})
     } catch (error) {
         res.status(500).json({error: error})
     }
